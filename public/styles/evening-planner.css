@@ -1,0 +1,194 @@
+.planner-container {
+  max-width: 1000px;
+}
+
+.planner-box {
+  background: #fef4f4;
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 30px;
+  border: 1px solid var(--line);
+}
+
+.planner-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2d2d2d;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+.time-table-label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.week-header {
+  display: grid;
+  grid-template-columns: 80px repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.day-label {
+  text-align: center;
+  font-weight: 600;
+  color: #555;
+  font-size: 14px;
+}
+
+.time-row {
+  display: grid;
+  grid-template-columns: 80px repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: start;
+}
+
+.time-label {
+  font-weight: 600;
+  color: #666;
+  padding: 10px 5px;
+  font-size: 14px;
+}
+
+.activity-cell {
+  min-height: 50px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #d4556f;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.activity-cell:not(:has(input:focus)):hover {
+  background: rgba(212, 85, 111, 0.2);
+  transform: translateY(-2px);
+  border-color: #d4556f;
+}
+
+.activity-cell input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+  color: #d4556f;
+  font-weight: 500;
+  text-align: center;
+  padding: 0;
+}
+
+.activity-cell:has(input:focus) {
+  background: rgba(212, 85, 111, 0.15);
+  border-color: #d4556f;
+}
+
+.activity-cell:has(input:not(:placeholder-shown)) {
+  background: rgba(212, 85, 111, 0.1);
+}
+
+/* 모달 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 0;
+  border-radius: var(--radius);
+  width: 90%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.modal-close {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--muted);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: var(--ink);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.history-item {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.history-item:hover {
+  border-color: var(--accent);
+  background: var(--paper-bg);
+}
+
+.history-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.history-date {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+@media (max-width: 768px) {
+  .week-header,
+  .time-row {
+    grid-template-columns: 60px repeat(5, 1fr);
+    gap: 5px;
+  }
+
+  .planner-title {
+    font-size: 20px;
+  }
+
+  .activity-cell {
+    font-size: 11px;
+    padding: 8px 4px;
+  }
+}

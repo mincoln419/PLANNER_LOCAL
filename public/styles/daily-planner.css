@@ -1,0 +1,249 @@
+.header-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.date-selector {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.planner-container {
+  max-width: 1200px;
+}
+
+.planner-page {
+  background: var(--paper-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.planner-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line-strong);
+  margin-bottom: 12px;
+}
+
+.planner-title {
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  font-size: 18px;
+}
+
+.planner-title small {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-left: 8px;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.planner-date-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.section-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 10px 0 6px;
+}
+
+.goal-input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  background: transparent;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  outline: none;
+  padding: 6px 2px;
+  margin-bottom: 10px;
+}
+
+.planner-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.card {
+  border-top: 1px solid var(--line-strong);
+  padding-top: 10px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.card-header .h {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.timeline-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12px;
+}
+
+.timeline-table td {
+  padding: 6px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.timeline-table td.time {
+  width: 14%;
+  color: var(--muted);
+  font-weight: 700;
+  text-align: center;
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+}
+
+.timeline-table td.plan,
+.timeline-table td.actual {
+  width: 43%;
+}
+
+.timeline-table input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font-size: 12px;
+  padding: 2px;
+}
+
+.todo-row {
+  display: grid;
+  grid-template-columns: 18px 1fr 16px;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.todo-row .idx {
+  color: var(--muted);
+  font-weight: 800;
+  text-align: right;
+}
+
+.todo-row input[type="text"] {
+  border: 0;
+  background: transparent;
+  outline: none;
+  font-size: 12px;
+  padding: 2px;
+}
+
+.todo-row input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent);
+}
+
+.mini {
+  border-top: 1px solid var(--line-strong);
+  padding-top: 10px;
+  margin-top: 12px;
+}
+
+.water {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 0 2px;
+  flex-wrap: wrap;
+}
+
+.water label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  display: inline-block;
+  transition: 0.15s;
+}
+
+.water input[type="checkbox"] {
+  display: none;
+}
+
+.water input[type="checkbox"]:checked + .dot {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.meal {
+  margin-top: 10px;
+  border-top: 1px solid var(--line-strong);
+  padding-top: 10px;
+  font-size: 12px;
+}
+
+.meal-row {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.meal-row .k {
+  color: var(--muted);
+  font-weight: 800;
+  text-align: right;
+}
+
+.meal-row input {
+  border: 0;
+  background: transparent;
+  outline: none;
+  font-size: 12px;
+  padding: 2px;
+}
+
+.save-button {
+  margin-top: 24px;
+  text-align: right;
+}
+
+@media (max-width: 968px) {
+  .planner-grid {
+    grid-template-columns: 1fr;
+  }
+}

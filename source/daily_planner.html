@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Daily Planner (Grid)</title>
+  <style>
+    :root{
+      --paper-bg: #f7e6e6;        /* 연핑크 배경 */
+      --ink: #1f1f1f;
+      --muted: rgba(31,31,31,.55);
+      --line: rgba(31,31,31,.25);
+      --line-strong: rgba(31,31,31,.45);
+      --accent: #c95454;          /* 포인트(빨강톤) */
+      --radius: 10px;
+    }
+
+    /* 화면 */
+    body{
+      margin:0;
+      background:#ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", Roboto, Arial, sans-serif;
+      color:var(--ink);
+    }
+
+    .wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    /* A4 프린트 */
+    .page{
+      width: 210mm;
+      height: 297mm;
+      background: var(--paper-bg);
+      box-shadow: 0 10px 35px rgba(0,0,0,.12);
+      border-radius: var(--radius);
+      padding: 18mm 16mm;
+      box-sizing:border-box;
+      position:relative;
+    }
+
+    .top{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      padding-bottom:10px;
+      border-bottom: 1px solid var(--line-strong);
+      margin-bottom:12px;
+    }
+
+    .title{
+      font-weight:800;
+      letter-spacing:.28em;
+      font-size:18px;
+    }
+    .title small{
+      font-weight:700;
+      letter-spacing:.08em;
+      margin-left:8px;
+      color:var(--accent);
+      font-size:12px;
+      vertical-align:baseline;
+    }
+
+    .date{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .date input{
+      width: 34mm;
+      border:0;
+      border-bottom:1px solid var(--line-strong);
+      background:transparent;
+      padding:2px 2px 3px;
+      font-size:12px;
+      color:var(--ink);
+      outline:none;
+    }
+
+    .section-label{
+      font-size:12px;
+      color:var(--muted);
+      margin: 10px 0 6px;
+    }
+
+    .goal{
+      padding: 4px 0 10px;
+      border-bottom:1px solid var(--line-strong);
+      margin-bottom: 10px;
+    }
+    .goal input{
+      width:100%;
+      border:0;
+      background:transparent;
+      font-size:16px;
+      font-weight:700;
+      color:var(--accent);
+      outline:none;
+      padding:6px 2px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:14px;
+    }
+
+    /* 좌측: 타임라인 */
+    .card{
+      border-top: 1px solid var(--line-strong);
+      padding-top:10px;
+    }
+    .card-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+    }
+    .card-header .h{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.04em;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+      font-size:12px;
+    }
+    .timeline td{
+      padding: 6px 6px;
+      border-bottom:1px solid var(--line);
+      vertical-align:middle;
+    }
+    .timeline td.time{
+      width: 14%;
+      color:var(--muted);
+      font-weight:700;
+      text-align:center;
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+    }
+    .timeline td.plan{
+      width: 43%;
+    }
+    .timeline td.actual{
+      width: 43%;
+    }
+    .timeline input{
+      width:100%;
+      border:0;
+      background:transparent;
+      outline:none;
+      font-size:12px;
+      padding:2px 2px;
+    }
+
+    /* 우측: 투두/워터/식사 */
+    .todo{
+      margin-bottom:12px;
+    }
+    .todo-row{
+      display:grid;
+      grid-template-columns: 18px 1fr 16px;
+      gap:8px;
+      align-items:center;
+      padding:6px 0;
+      border-bottom:1px solid var(--line);
+      font-size:12px;
+    }
+    .todo-row .idx{
+      color:var(--muted);
+      font-weight:800;
+      text-align:right;
+    }
+    .todo-row input[type="text"]{
+      border:0;
+      background:transparent;
+      outline:none;
+      font-size:12px;
+      padding:2px 2px;
+    }
+    .todo-row input[type="checkbox"]{
+      width:14px;height:14px;
+      accent-color: var(--accent);
+    }
+
+    .mini{
+      border-top:1px solid var(--line-strong);
+      padding-top:10px;
+      margin-top:12px;
+    }
+
+    .water{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 0 2px;
+      flex-wrap:wrap;
+    }
+    .dot{
+      width:12px;height:12px;
+      border-radius:50%;
+      border:1px solid var(--line-strong);
+      background:transparent;
+      display:inline-block;
+    }
+    /* 체크되면 채워짐 */
+    .water input{ display:none; }
+    .water label{
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+    .water label .dot{ transition: .15s; }
+    .water input:checked + .dot{
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .meal{
+      margin-top:10px;
+      border-top:1px solid var(--line-strong);
+      padding-top:10px;
+      font-size:12px;
+    }
+    .meal-row{
+      display:grid;
+      grid-template-columns: 18px 1fr;
+      gap:8px;
+      align-items:center;
+      padding:6px 0;
+      border-bottom:1px solid var(--line);
+    }
+    .meal-row .k{
+      color:var(--muted);
+      font-weight:800;
+      text-align:right;
+    }
+    .meal-row input{
+      border:0;
+      background:transparent;
+      outline:none;
+      font-size:12px;
+      padding:2px 2px;
+    }
+
+    /* 프린트 최적화 */
+    @media print{
+      body{ background:#fff; }
+      .wrap{ padding:0; }
+      .page{
+        box-shadow:none;
+        border-radius:0;
+        width:auto;
+        height:auto;
+        margin:0;
+      }
+      @page{
+        size: A4;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="page">
+      <!-- 헤더 -->
+      <div class="top">
+        <div class="title">DAILY PLANNER <small>(Grid)</small></div>
+        <div class="date">
+          <span>Date :</span>
+          <input type="text" placeholder="YYYY.MM.DD" />
+        </div>
+      </div>
+
+      <!-- 오늘의 목표 -->
+      <div class="section-label">Today's goal</div>
+      <div class="goal">
+        <input type="text" placeholder="오늘의 목표를 한 줄로 적어보세요" />
+      </div>
+
+      <div class="grid">
+        <!-- 좌측: 타임라인 -->
+        <div class="card">
+          <div class="card-header">
+            <div class="h">Timeline</div>
+          </div>
+
+          <table class="timeline" aria-label="Timeline">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--line-strong);">
+                <th style="text-align:left; padding:4px 6px; font-size:11px; color:var(--muted); font-weight:700; border-right: 1px solid var(--line);">계획</th>
+                <th style="text-align:center; padding:4px 6px; font-size:11px; color:var(--muted); font-weight:700; border-right: 1px solid var(--line);">시간</th>
+                <th style="text-align:left; padding:4px 6px; font-size:11px; color:var(--muted); font-weight:700;">실제</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 06:00 ~ 24:00 -->
+              <tr><td class="plan"><input type="text" placeholder="" /></td><td class="time">06:00</td><td class="actual"><input type="text" placeholder="" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">07:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">08:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">09:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">10:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">11:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">12:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">13:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">14:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">15:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">16:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">17:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">18:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">19:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">20:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">21:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">22:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">23:00</td><td class="actual"><input type="text" /></td></tr>
+              <tr><td class="plan"><input type="text" /></td><td class="time">24:00</td><td class="actual"><input type="text" /></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 우측: 투두 + 워터 + 식사 -->
+        <div>
+          <div class="card todo">
+            <div class="card-header">
+              <div class="h">To-Do List</div>
+            </div>
+
+            <!-- 1~6 중요 -->
+            <div class="todo-row">
+              <div class="idx">1</div>
+              <input type="text" placeholder="가장 중요한 일" />
+              <input type="checkbox" />
+            </div>
+            <div class="todo-row">
+              <div class="idx">2</div>
+              <input type="text" />
+              <input type="checkbox" />
+            </div>
+            <div class="todo-row">
+              <div class="idx">3</div>
+              <input type="text" />
+              <input type="checkbox" />
+            </div>
+            <div class="todo-row">
+              <div class="idx">4</div>
+              <input type="text" />
+              <input type="checkbox" />
+            </div>
+            <div class="todo-row">
+              <div class="idx">5</div>
+              <input type="text" />
+              <input type="checkbox" />
+            </div>
+            <div class="todo-row">
+              <div class="idx">6</div>
+              <input type="text" />
+              <input type="checkbox" />
+            </div>
+
+            <!-- 0번: 잡일 -->
+            <div style="height:8px"></div>
+            <div class="todo-row">
+              <div class="idx">0</div>
+              <input type="text" placeholder="잡일/즉시 처리(예: 문구점 들르면 사오기)" />
+              <input type="checkbox" />
+            </div>
+            <div class="todo-row">
+              <div class="idx">0</div>
+              <input type="text" />
+              <input type="checkbox" />
+            </div>
+          </div>
+
+          <!-- Water -->
+          <div class="mini">
+            <div class="card-header" style="margin-bottom:6px;">
+              <div class="h">Water</div>
+            </div>
+            <div class="water" aria-label="Water tracker (8 cups)">
+              <!-- 8개 동그라미 -->
+              <label><input type="checkbox"><span class="dot" aria-hidden="true"></span></label>
+              <label><input type="checkbox"><span class="dot" aria-hidden="true"></span></label>
+              <label><input type="checkbox"><span class="dot" aria-hidden="true"></span></label>
+              <label><input type="checkbox"><span class="dot" aria-hidden="true"></span></label>
+              <label><input type="checkbox"><span class="dot" aria-hidden="true"></span></label>
+              <label><input type="checkbox"><span class="dot" aria-hidden="true"></span></label>
+              <label><input type="checkbox"><span class="dot" aria-hidden="true"></span></label>
+              <label><input type="checkbox"><span class="dot" aria-hidden="true"></span></label>
+            </div>
+          </div>
+
+          <!-- Meal -->
+          <div class="meal">
+            <div class="card-header" style="margin-bottom:6px;">
+              <div class="h">Meal</div>
+            </div>
+            <div class="meal-row">
+              <div class="k">B.</div>
+              <input type="text" placeholder="아침" />
+            </div>
+            <div class="meal-row">
+              <div class="k">L.</div>
+              <input type="text" placeholder="점심" />
+            </div>
+            <div class="meal-row">
+              <div class="k">D.</div>
+              <input type="text" placeholder="저녁" />
+            </div>
+            <div class="meal-row" style="border-bottom:0;">
+              <div class="k">S.</div>
+              <input type="text" placeholder="간식" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

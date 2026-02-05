@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>포모도로 타이머</title>
+  <link rel="stylesheet" href="/styles/common.css">
+  <link rel="stylesheet" href="/styles/pomodoro.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>⏰ 플래너</h1>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">대시보드</span>
+        </a>
+        <a href="/daily-planner.html" class="nav-item">
+          <span class="nav-icon">📅</span>
+          <span class="nav-text">Daily Planner</span>
+        </a>
+        <a href="/evening-planner.html" class="nav-item">
+          <span class="nav-icon">🌙</span>
+          <span class="nav-text">Evening Planner</span>
+        </a>
+        <a href="/pomodoro.html" class="nav-item active">
+          <span class="nav-icon">🍅</span>
+          <span class="nav-text">포모도로 타이머</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main-content">
+      <header class="page-header">
+        <div>
+          <h2>포모도로 타이머</h2>
+          <p>집중력을 높이는 시간 관리 기법</p>
+        </div>
+      </header>
+
+      <div class="pomodoro-container">
+        <div class="pomodoro-timer">
+          <div class="timer-display" id="timer-display">25:00</div>
+          <div class="timer-controls">
+            <button class="btn btn-secondary" onclick="setDuration(25)">25분</button>
+            <button class="btn btn-secondary" onclick="setDuration(15)">15분</button>
+            <button class="btn btn-secondary" onclick="setDuration(5)">5분</button>
+          </div>
+          <div class="task-input">
+            <input type="text" id="task-input" placeholder="할 일을 입력하세요..." />
+          </div>
+          <div class="timer-buttons">
+            <button class="btn btn-primary" id="start-btn" onclick="startTimer()">시작</button>
+            <button class="btn btn-secondary" id="pause-btn" onclick="pauseTimer()" style="display: none;">일시정지</button>
+            <button class="btn btn-secondary" id="reset-btn" onclick="resetTimer()">리셋</button>
+          </div>
+        </div>
+
+        <div class="pomodoro-stats">
+          <h3>최근 세션</h3>
+          <div id="session-list" class="session-list">
+            <div class="loading">로딩 중...</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/scripts/pomodoro.js"></script>
+</body>
+</html>
