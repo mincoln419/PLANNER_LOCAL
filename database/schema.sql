@@ -60,13 +60,13 @@ CREATE TABLE IF NOT EXISTS evening_planners (
 );
 
 -- Evening Planner Activities 테이블
+-- 각 시간대/요일 조합에 여러 활동을 저장할 수 있도록 UNIQUE 제약조건 제거
 CREATE TABLE IF NOT EXISTS evening_activities (
     id SERIAL PRIMARY KEY,
     evening_planner_id INTEGER NOT NULL REFERENCES evening_planners(id) ON DELETE CASCADE,
     time_hour INTEGER NOT NULL CHECK (time_hour >= 17 AND time_hour <= 24),
     day_of_week INTEGER NOT NULL CHECK (day_of_week >= 1 AND day_of_week <= 5), -- 1: MON, 2: TUE, ..., 5: FRI
-    activity_text TEXT,
-    UNIQUE(evening_planner_id, time_hour, day_of_week)
+    activity_text TEXT
 );
 
 -- Evening Planner History 테이블 (이력 관리)

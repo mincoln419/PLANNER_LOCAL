@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import pool from '../database/db.js';
+
 const router = express.Router();
-const pool = require('../database/db');
 
 // 현재 활성화된 Evening Planner 조회
 router.get('/', async (req, res) => {
@@ -51,22 +52,20 @@ router.post('/', async (req, res) => {
     
     const plannerId = plannerResult.rows[0].id;
     
-    // Activities 저장
+    // 기존 Activities 모두 삭제
+    await pool.query(
+      'DELETE FROM evening_activities WHERE evening_planner_id = $1',
+      [plannerId]
+    );
+    
+    // Activities 저장 (여러 활동을 각각 저장)
     if (activities && Array.isArray(activities)) {
       for (const activity of activities) {
         if (activity.activity_text && activity.activity_text.trim()) {
           await pool.query(
             `INSERT INTO evening_activities (evening_planner_id, time_hour, day_of_week, activity_text)
-             VALUES ($1, $2, $3, $4)
-             ON CONFLICT (evening_planner_id, time_hour, day_of_week)
-             DO UPDATE SET activity_text = $4`,
+             VALUES ($1, $2, $3, $4)`,
             [plannerId, activity.time_hour, activity.day_of_week, activity.activity_text]
-          );
-        } else {
-          // 빈 활동은 삭제
-          await pool.query(
-            'DELETE FROM evening_activities WHERE evening_planner_id = $1 AND time_hour = $2 AND day_of_week = $3',
-            [plannerId, activity.time_hour, activity.day_of_week]
           );
         }
       }
@@ -131,4 +130,4 @@ router.get('/history/:id', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

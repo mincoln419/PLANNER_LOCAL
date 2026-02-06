@@ -1,0 +1,29 @@
+:root {
+  --paper-bg: #f7e6e6;
+  --ink: #1f1f1f;
+  --muted: rgba(31, 31, 31, 0.55);
+  --line: rgba(31, 31, 31, 0.25);
+  --line-strong: rgba(31, 31, 31, 0.45);
+  --accent: #c95454;
+  --radius: 10px;
+  --sidebar-width: 250px;
+  --header-height: 80px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--ink);
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}

@@ -1,11 +1,13 @@
-require('dotenv').config();
-const { Pool } = require('pg');
+import 'dotenv/config';
+import pg from 'pg';
+
+const { Pool } = pg;
 
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT || 5432,
   database: process.env.DB_NAME || 'planner_db',
-  user: process.env.DB_USER || 'postgres',
+  user: process.env.DB_USER || 'mermer',
   password: process.env.DB_PASSWORD,
 });
 
@@ -14,4 +16,4 @@ pool.on('error', (err) => {
   process.exit(-1);
 });
 
-module.exports = pool;
+export default pool;

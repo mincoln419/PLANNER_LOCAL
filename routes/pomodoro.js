@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import pool from '../database/db.js';
+
 const router = express.Router();
-const pool = require('../database/db');
 
 // 모든 포모도로 세션 조회
 router.get('/', async (req, res) => {
@@ -71,4 +72,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

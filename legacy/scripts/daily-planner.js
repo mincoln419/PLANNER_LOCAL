@@ -327,6 +327,29 @@ async function savePlanner() {
   }
 }
 
+// 키보드 단축키 핸들러
+document.addEventListener('keydown', (e) => {
+  // Mac: Cmd, Windows: Ctrl
+  const isModifierPressed = e.metaKey || e.ctrlKey;
+  const isShiftPressed = e.shiftKey;
+  
+  if (!isModifierPressed) return;
+  
+  // Cmd/Ctrl + Shift + S: 저장 (브라우저 기본 저장과 겹치지 않음)
+  if ((e.key === 's' || e.key === 'S') && isShiftPressed) {
+    e.preventDefault();
+    savePlanner();
+    return;
+  }
+  
+  // Cmd/Ctrl + Shift + L: 불러오기 (Load의 L, 브라우저 기본 단축키와 겹치지 않음)
+  if ((e.key === 'l' || e.key === 'L') && isShiftPressed) {
+    e.preventDefault();
+    loadPlanner();
+    return;
+  }
+});
+
 // 페이지 로드 시 실행
 document.addEventListener('DOMContentLoaded', () => {
   const date = getDateFromURL() || setTodayDate();

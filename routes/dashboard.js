@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import pool from '../database/db.js';
+
 const router = express.Router();
-const pool = require('../database/db');
 
 // 대시보드 데이터 조회
 router.get('/', async (req, res) => {
@@ -80,4 +81,4 @@ router.get('/', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

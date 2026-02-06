@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Evening Planner</title>
+  <title>Daily Planner</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/styles/common.css">
-  <link rel="stylesheet" href="/styles/evening-planner.css">
+  <link rel="stylesheet" href="/styles/daily-planner.css">
 </head>
 <body>
   <div class="app-container">
@@ -19,11 +20,11 @@
           <span class="nav-icon">📊</span>
           <span class="nav-text">대시보드</span>
         </a>
-        <a href="/daily-planner.html" class="nav-item">
+        <a href="/daily-planner.html" class="nav-item active">
           <span class="nav-icon">📅</span>
           <span class="nav-text">Daily Planner</span>
         </a>
-        <a href="/evening-planner.html" class="nav-item active">
+        <a href="/evening-planner.html" class="nav-item">
           <span class="nav-icon">🌙</span>
           <span class="nav-text">Evening Planner</span>
         </a>
@@ -39,35 +40,26 @@
       <header class="page-header">
         <div class="header-controls">
           <div>
-            <h2>Evening Planner</h2>
-            <p>저녁 시간대 루틴을 계획하세요</p>
+            <h2>Daily Planner</h2>
+            <p>날짜별로 계획을 세우고 실행하세요</p>
           </div>
-          <div>
-            <button class="btn btn-secondary" onclick="showHistory()">이력 보기</button>
-            <button class="btn btn-primary" onclick="savePlanner()">저장하기</button>
+          <div class="date-selector">
+            <input type="date" id="date-input" />
+            <button class="btn btn-primary" onclick="loadPlanner()">불러오기</button>
+            <button class="btn btn-primary" onclick="createNewPlanner()">새로 만들기</button>
+            <div class="keyboard-hint">
+              <span class="hint-text">💡 단축키: <kbd>⌘/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> 저장, <kbd>⌘/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd> 불러오기</span>
+            </div>
           </div>
         </div>
       </header>
 
       <div class="planner-container" id="planner-container">
-        <div class="loading">로딩 중...</div>
+        <div class="loading">날짜를 선택하고 불러오기를 클릭하세요</div>
       </div>
     </main>
   </div>
 
-  <!-- 이력 모달 -->
-  <div id="history-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Evening Planner 이력</h3>
-        <span class="modal-close" onclick="closeHistory()">&times;</span>
-      </div>
-      <div class="modal-body" id="history-list">
-        <div class="loading">로딩 중...</div>
-      </div>
-    </div>
-  </div>
-
-  <script src="/scripts/evening-planner.js"></script>
+  <script src="/scripts/daily-planner.js"></script>
 </body>
 </html>
