@@ -25,8 +25,14 @@ function SaveModal({ show, onClose }) {
 
   useEffect(() => {
     if (show) {
+      // 현재 스크롤 위치 저장
+      const scrollPosition = window.scrollY || window.pageYOffset;
+      
       setVisible(true);
       setIsClosing(false);
+      
+      // 포커스로 인한 스크롤 방지: 현재 포커스된 요소 저장
+      const activeElement = document.activeElement;
       
       // 1초 후 페이드아웃 시작
       timersRef.current.fadeOut = setTimeout(() => {
@@ -45,6 +51,14 @@ function SaveModal({ show, onClose }) {
       };
       
       window.addEventListener('keydown', handleKeyDown);
+      
+      // 포커스로 인한 스크롤 방지
+      requestAnimationFrame(() => {
+        if (activeElement && activeElement !== document.body) {
+          activeElement.focus({ preventScroll: true });
+        }
+        window.scrollTo(0, scrollPosition);
+      });
       
       return () => {
         if (timersRef.current.fadeOut) {
@@ -67,10 +81,14 @@ function SaveModal({ show, onClose }) {
     <div 
       className={`save-modal-overlay ${isClosing ? 'fade-out' : ''}`}
       onClick={closeModal}
+      tabIndex={-1}
+      onFocus={(e) => e.target.blur()}
     >
       <div 
         className={`save-modal-content ${isClosing ? 'fade-out' : ''}`}
         onClick={(e) => e.stopPropagation()}
+        tabIndex={-1}
+        onFocus={(e) => e.target.blur()}
       >
         <div className="save-modal-icon">✓</div>
         <div className="save-modal-message">저장되었습니다</div>

@@ -18,6 +18,7 @@ function DailyPlanner() {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const autoSaveIntervalRef = useRef(null);
+  const savedScrollPositionRef = useRef(null);
 
   useEffect(() => {
     const dateFromURL = searchParams.get('date');
@@ -38,6 +39,36 @@ function DailyPlanner() {
       }
     };
   }, [searchParams]);
+
+  // planner 상태 변경 후 스크롤 위치 복원
+  useEffect(() => {
+    if (savedScrollPositionRef.current !== null && planner) {
+      // 여러 프레임에 걸쳐 복원 시도 (React 리렌더링 완료 보장)
+      const restoreScroll = () => {
+        const scrollPos = savedScrollPositionRef.current;
+        if (scrollPos !== null) {
+          window.scrollTo({
+            top: scrollPos,
+            left: 0,
+            behavior: 'instant'
+          });
+          savedScrollPositionRef.current = null;
+        }
+      };
+      
+      // 즉시 한 번, 그리고 여러 프레임 후에도 복원 시도
+      restoreScroll();
+      requestAnimationFrame(() => {
+        restoreScroll();
+        requestAnimationFrame(() => {
+          restoreScroll();
+          setTimeout(() => {
+            restoreScroll();
+          }, 100);
+        });
+      });
+    }
+  }, [planner]);
 
   const createEmptyPlanner = (date) => {
     const hours = Array.from({ length: 19 }, (_, i) => i + 6);
@@ -130,6 +161,9 @@ function DailyPlanner() {
       return;
     }
 
+    // 현재 스크롤 위치 저장
+    savedScrollPositionRef.current = window.scrollY || window.pageYOffset;
+
     const plannerData = {
       date: currentDate,
       goal: planner.goal,
@@ -156,7 +190,7 @@ function DailyPlanner() {
         } else {
           setShowSnackbar(true);
         }
-        loadPlanner(currentDate);
+        // 저장 성공 - 데이터 재로드 불필요 (스크롤 유지)
       } else {
         if (!isAutoSave) {
           setErrorMessage('저장 중 오류가 발생했습니다.');

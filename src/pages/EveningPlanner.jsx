@@ -21,6 +21,7 @@ function EveningPlanner() {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const autoSaveIntervalRef = useRef(null);
+  const savedScrollPositionRef = useRef(null);
   
   const mouseDownCellRef = useRef(null);
   const mouseDownTimeRef = useRef(0);
@@ -46,6 +47,36 @@ function EveningPlanner() {
       }
     };
   }, []);
+
+  // planner 상태 변경 후 스크롤 위치 복원
+  useEffect(() => {
+    if (savedScrollPositionRef.current !== null && planner) {
+      // 여러 프레임에 걸쳐 복원 시도 (React 리렌더링 완료 보장)
+      const restoreScroll = () => {
+        const scrollPos = savedScrollPositionRef.current;
+        if (scrollPos !== null) {
+          window.scrollTo({
+            top: scrollPos,
+            left: 0,
+            behavior: 'instant'
+          });
+          savedScrollPositionRef.current = null;
+        }
+      };
+      
+      // 즉시 한 번, 그리고 여러 프레임 후에도 복원 시도
+      restoreScroll();
+      requestAnimationFrame(() => {
+        restoreScroll();
+        requestAnimationFrame(() => {
+          restoreScroll();
+          setTimeout(() => {
+            restoreScroll();
+          }, 100);
+        });
+      });
+    }
+  }, [planner]);
 
   useEffect(() => {
     if (selectedCells.size > 0 && !isDragging) {
@@ -225,6 +256,9 @@ function EveningPlanner() {
       return;
     }
     
+    // 현재 스크롤 위치 저장
+    savedScrollPositionRef.current = window.scrollY || window.pageYOffset;
+    
     setSaving(true);
     
     const activities = [];
@@ -279,7 +313,7 @@ function EveningPlanner() {
         
         closeInputModal();
         setShowSaveModal(true);
-        await loadPlanner();
+        // 저장 성공 - 데이터 재로드 불필요 (스크롤 유지)
       } else {
         setErrorMessage('저장 중 오류가 발생했습니다.');
         setShowErrorModal(true);
@@ -294,6 +328,9 @@ function EveningPlanner() {
   };
 
   const savePlanner = async (isAutoSave = false) => {
+    // 현재 스크롤 위치 저장
+    savedScrollPositionRef.current = window.scrollY || window.pageYOffset;
+    
     const activities = [];
     
     document.querySelectorAll('.activity-cell').forEach(cell => {
@@ -328,7 +365,7 @@ function EveningPlanner() {
         } else {
           setShowSnackbar(true);
         }
-        loadPlanner();
+        // 저장 성공 - 데이터 재로드 불필요 (스크롤 유지)
       } else {
         if (!isAutoSave) {
           setErrorMessage('저장 중 오류가 발생했습니다.');

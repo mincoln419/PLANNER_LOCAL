@@ -144,6 +144,7 @@ function Pomodoro() {
         <div className="pomodoro-timer">
           <div className="timer-display">{formatTime(timeLeft)}</div>
           <div className="timer-controls">
+            <button className="btn btn-secondary" onClick={() => handleSetDuration(45)}>45분</button>
             <button className="btn btn-secondary" onClick={() => handleSetDuration(25)}>25분</button>
             <button className="btn btn-secondary" onClick={() => handleSetDuration(15)}>15분</button>
             <button className="btn btn-secondary" onClick={() => handleSetDuration(5)}>5분</button>
